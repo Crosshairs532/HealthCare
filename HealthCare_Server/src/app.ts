@@ -1,5 +1,6 @@
 import express from "express";
 import { userRoutes } from "./app/modules/User/user.routes";
+import { adminRoutes } from "./app/modules/admin/admin.routes";
 
 const app = express();
 
@@ -13,4 +14,5 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/v1/user", userRoutes);
+app.use("/api/v1/admin", adminRoutes);
 export default app;
