@@ -1,11 +1,15 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { adminService } from "./admin.service";
 import pick from "../../shared/pick";
 import { pagination, searchItems } from "./admin.constant";
 import prisma from "../../utils/prisma";
 import sendResponse from "../../utils/sendResponse";
 
-const getAllFromDB = async (req: Request, res: Response) => {
+const getAllFromDB = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const param = req.query;
   const filter = pick(param, searchItems);
   const paginationItem = pick(param, pagination); //! page, limit
@@ -21,12 +25,7 @@ const getAllFromDB = async (req: Request, res: Response) => {
       data: result.data,
     });
   } catch (error: any) {
-    sendResponse(res, {
-      success: true,
-      status: 500,
-      message: error?.name || "something went wrong on fetching!",
-      error: error,
-    });
+    next(error);
   }
 };
 
