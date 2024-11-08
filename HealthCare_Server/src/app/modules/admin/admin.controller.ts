@@ -4,16 +4,14 @@ import pick from "../../shared/pick";
 import { pagination, searchItems } from "./admin.constant";
 import prisma from "../../utils/prisma";
 import sendResponse from "../../utils/sendResponse";
+import catchAsync from "../../utils/catchAsync";
 
-const getAllFromDB = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const param = req.query;
-  const filter = pick(param, searchItems);
-  const paginationItem = pick(param, pagination); //! page, limit
-  try {
+const getAllFromDB = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const param = req.query;
+    const filter = pick(param, searchItems);
+    const paginationItem = pick(param, pagination); //! page, limit
+
     const result = await adminService.getAllFromDB(filter, paginationItem);
 
     sendResponse(res, {
@@ -24,10 +22,8 @@ const getAllFromDB = async (
       meta: result.meta,
       data: result.data,
     });
-  } catch (error: any) {
-    next(error);
   }
-};
+);
 
 const getByIdFromDB = async (req: Request, res: Response) => {
   const { id } = req.params;
