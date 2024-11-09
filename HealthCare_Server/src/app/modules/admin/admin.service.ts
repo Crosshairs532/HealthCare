@@ -1,5 +1,6 @@
 import { Admin, Prisma, PrismaClient, UserStatus } from "@prisma/client";
 import pagination from "../helper/pagination";
+import { IPaginationOptions } from "../../interfaces/pagination";
 
 const prisma = new PrismaClient();
 
