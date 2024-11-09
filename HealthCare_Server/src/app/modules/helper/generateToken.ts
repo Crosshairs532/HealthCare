@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload, Secret } from "jsonwebtoken";
 const generateToken = (payload: any, secret: string, expireTime: string) => {
   const token = jwt.sign(
     {
@@ -15,6 +15,11 @@ const generateToken = (payload: any, secret: string, expireTime: string) => {
   return token;
 };
 
+const verifyToken = (refreshToken: string, secret: Secret) => {
+  return jwt.verify(refreshToken, secret) as JwtPayload;
+};
+
 export const jwtHelper = {
   generateToken,
+  verifyToken,
 };

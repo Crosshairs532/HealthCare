@@ -29,7 +29,7 @@ const refreshToken = catchAsync(async (req: Request, res: Response) => {
     success: true,
     status: 200,
     message: "Login Success",
-    data: null,
+    data: result,
   });
 });
 export const authController = {
