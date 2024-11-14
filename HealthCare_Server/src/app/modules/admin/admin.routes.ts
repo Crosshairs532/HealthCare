@@ -33,4 +33,5 @@ router.delete(
   auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
   adminController.DeleteFromDB
 );
+
 export const adminRoutes = router;

@@ -18,6 +18,7 @@ const auth = (...roles: string[]) => {
       config.jwt.jwt_secret as string
     );
 
+    req.user = verifiedUser;
     if (verifiedUser && !roles.includes(verifiedUser.role)) {
       throw new ApiError(
         httpStatus.INTERNAL_SERVER_ERROR,

@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import catchAsync from "../../utils/catchAsync";
 import { authService } from "./auth.service";
 import sendResponse from "../../utils/sendResponse";
+import { JwtPayload } from "jsonwebtoken";
 
 const loginUser = catchAsync(async (req: Request, res: Response) => {
   const result = await authService.loginUser(req.body);
@@ -32,7 +33,22 @@ const refreshToken = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+
+const changePassword = catchAsync(async (req: Request, res: Response) => {
+  const user = req.user;
+  const payload = req.body;
+
+  const result = authService.changePassword(user, payload);
+
+  sendResponse(res, {
+    success: true,
+    status: 200,
+    message: "Password Changed successfully!",
+    data: result,
+  });
+});
 export const authController = {
   loginUser,
   refreshToken,
+  changePassword,
 };
