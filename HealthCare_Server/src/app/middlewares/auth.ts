@@ -4,7 +4,7 @@ import config from "../../config";
 import ApiError from "../errors/ApiError";
 
 const auth = (...roles: string[]) => {
-  return (req: Request, res: Response, next: NextFunction) => {
+  return (req: Request & { user?: any }, res: Response, next: NextFunction) => {
     const token = req.headers.authorization;
 
     if (!token) {

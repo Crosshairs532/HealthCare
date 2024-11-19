@@ -5,9 +5,9 @@ const generateToken = (payload: any, secret: string, expireTime: string) => {
       email: payload.email,
       role: payload.role,
     },
-    "abcd",
+    secret,
     {
-      expiresIn: "1h",
+      expiresIn: expireTime,
       algorithm: "HS256",
     }
   );
