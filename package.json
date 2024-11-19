@@ -1,5 +1,9 @@
 {
   "dependencies": {
-    "http-status": "^2.0.0"
+    "http-status": "^2.0.0",
+    "nodemailer": "^6.9.16"
+  },
+  "devDependencies": {
+    "@types/nodemailer": "^6.4.16"
   }
 }

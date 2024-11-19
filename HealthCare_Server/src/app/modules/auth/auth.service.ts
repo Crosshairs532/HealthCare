@@ -4,6 +4,8 @@ import bcrypt, { hashSync } from "bcrypt";
 import prisma from "../../utils/prisma";
 import { UserRole, UserStatus } from "@prisma/client";
 import config from "../../../config";
+import emailSender from "./emailSender";
+import ApiError from "../../errors/ApiError";
 
 const loginUser = async (payload: { email: string; password: string }) => {
   const userData = await prisma.user.findUniqueOrThrow({
@@ -119,10 +121,54 @@ const forgotPassword = async ({ email }: { email: string }) => {
     config.jwt.reset_secret as string,
     config.jwt.reset_token_expires_in as string
   );
+  const frontendLink = `https://localhost:3000/reset-pass?email=${email}&token=${resetPassToken}`;
+  await emailSender(
+    userData.email,
+
+    `
+  <div>
+      <p>Dear User,</p>
+      <p>Reset password Link : 
+        <a href=${frontendLink}>
+            Reset Password Link
+        </a>
+      </p>
+  </div>
+`
+  );
 };
+
+const resetPassword = async (token: string, payload: any) => {
+  const userData = await prisma.user.findUniqueOrThrow({
+    where: {
+      email: payload.email,
+    },
+  });
+
+  const verifyToken = jwtHelper.verifyToken(
+    token,
+    config.jwt.reset_secret as string
+  );
+  if (!verifyToken) {
+    throw new ApiError(httpStatus.FORBIDDEN, "Not authorized!");
+  }
+  // hash Pass
+  const hashedPassword = await bcrypt.hash(payload.password, 10);
+
+  const updated = await prisma.user.update({
+    where: {
+      email: payload.email,
+    },
+    data: {
+      password: hashedPassword,
+    },
+  });
+};
+
 export const authService = {
   loginUser,
   refreshToken,
   changePassword,
   forgotPassword,
+  resetPassword,
 };

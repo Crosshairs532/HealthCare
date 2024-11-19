@@ -16,4 +16,8 @@ export default {
     reset_secret: process.env.RESET_SECRET,
     reset_token_expires_in: process.env.RESET_EXPIRETIME,
   },
+  reset_pass: {
+    email: process.env.EMAIL,
+    email_password: process.env.EMAIL_PASSWORD,
+  },
 };
