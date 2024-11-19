@@ -20,4 +20,9 @@ export default {
     email: process.env.EMAIL,
     email_password: process.env.EMAIL_PASSWORD,
   },
+  cloudinary: {
+    cloudinary_secret: process.env.CLOUDINARY_SECRET,
+    cloudinary_key: process.env.CLOUDINARY_KEY,
+    cloudinary_name: process.env.CLOUDINARY_NAME,
+  },
 };

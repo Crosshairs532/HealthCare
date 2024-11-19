@@ -3,7 +3,7 @@ import { userService } from "./user.service";
 
 const createAdmin = (req: Request, res: Response) => {
   try {
-    const result = userService.createAdmin(req.body);
+    const result = userService.createAdmin(req);
     res.status(200).send({
       success: true,
       message: "Admin created successfully",
