@@ -29,4 +29,16 @@ router.post(
   userController.createAdmin
 );
 
+router.get(
+  "/",
+  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  userController.getAllFromDB
+);
+
+router.patch(
+  "/:id/status",
+  auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
+  userController.changeProfileStatus
+);
+
 export const userRoutes = router;

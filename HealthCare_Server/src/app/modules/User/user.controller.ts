@@ -1,5 +1,10 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { userService } from "./user.service";
+import catchAsync from "../../utils/catchAsync";
+import pick from "../../shared/pick";
+import { userFilterableFields } from "./user.constants";
+import { pagination } from "../admin/admin.constant";
+import sendResponse from "../../utils/sendResponse";
 
 const createAdmin = (req: Request, res: Response) => {
   try {
@@ -34,7 +39,41 @@ const createDoctor = (req: Request, res: Response) => {
     });
   }
 };
+
+const getAllFromDB = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const param = req.query;
+    const filter = pick(param, userFilterableFields);
+    const paginationItem = pick(param, pagination); //! page, limit
+
+    const result = await userService.getAllFromDB(filter, paginationItem);
+
+    sendResponse(res, {
+      success: true,
+      status: 200,
+
+      message: "All users Fetched",
+      meta: result.meta,
+      data: result.data,
+    });
+  }
+);
+
+const changeProfileStatus = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  const result = await userService.changeProfileStatus(id, req.body);
+
+  sendResponse(res, {
+    status: httpStatus.OK,
+    success: true,
+    message: "Profile status changed successfully",
+    data: result,
+  });
+});
 export const userController = {
   createAdmin,
   createDoctor,
+  getAllFromDB,
+  changeProfileStatus,
 };
