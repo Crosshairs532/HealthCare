@@ -3,6 +3,8 @@ import bcrypt, { hashSync } from "bcrypt";
 import { fileUploader } from "../helper/fileUploader";
 import pagination from "../helper/pagination";
 import { userSearchableFields } from "./user.constants";
+import { Request } from "express";
+import { IFile } from "../../interfaces/file";
 const prisma = new PrismaClient();
 
 const createAdmin = async (req: any) => {
@@ -174,7 +176,7 @@ const getMyProfile = async (user: any) => {
   };
 };
 
-const updateMyProfile = async (user: any, payload) => {
+const updateMyProfile = async (user: any, req: Request) => {
   const userInfo = await prisma.user.findUniqueOrThrow({
     where: {
       email: user.email,
@@ -190,12 +192,19 @@ const updateMyProfile = async (user: any, payload) => {
   });
 
   let profileInfo;
+
+  const file = req.file as IFile;
+
+  if (file) {
+    const uploaded = await fileUploader.uploadImage(file);
+    req.body.profilePhoto = uploaded?.secure_url;
+  }
   if (user.role === UserRole.ADMIN) {
     profileInfo = await prisma.admin.update({
       where: {
         email: user.email,
       },
-      data: payload,
+      data: req.body,
     });
   }
   if (user.role === UserRole.DOCTOR) {
@@ -203,7 +212,7 @@ const updateMyProfile = async (user: any, payload) => {
       where: {
         email: user.email,
       },
-      data: payload,
+      data: req.body,
     });
   }
   // if (user.role === UserRole.PATIENT) {
