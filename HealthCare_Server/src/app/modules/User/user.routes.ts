@@ -8,6 +8,17 @@ import { userValidation } from "./user.validation";
 
 const router = Router();
 
+router.get(
+  "/",
+  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  userController.getAllFromDB
+);
+router.get(
+  "/me",
+  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  userController.getMyProfile
+);
+
 router.post(
   "/create-admin",
   auth(UserRole.ADMIN),
@@ -29,16 +40,20 @@ router.post(
   userController.createAdmin
 );
 
-router.get(
-  "/",
-  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
-  userController.getAllFromDB
-);
-
 router.patch(
   "/:id/status",
   auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
   userController.changeProfileStatus
+);
+router.patch(
+  "/update-profile",
+  auth(UserRole.ADMIN, UserRole.DOCTOR, UserRole.PATIENT, UserRole.SUPER_ADMIN),
+  fileUploader.upload.single("file"),
+  // (req: Request, res: Response, next: NextFunction) => {
+  //   req.body = userValidation.createAdmin.parse(req.body.data);
+  //   return userController.createAdmin(req, res);
+  // },
+  userController.updateMyProfile
 );
 
 export const userRoutes = router;
