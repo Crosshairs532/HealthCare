@@ -5,6 +5,9 @@ import auth from "../../middlewares/auth";
 
 const router = Router();
 
+router.get("/", doctorController.getAllFromDB);
+router.get("/:id", doctorController.getByIdFromDB);
+
 router.patch(
   "/:id",
   auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR),
